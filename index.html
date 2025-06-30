@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Bayangan di Balik Hujan - RPG</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #23243a 0%, #181824 100%);
+      color: #f3f3f3;
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+      text-align: center;
+      padding: 30px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .story-box {
+      max-width: 800px;
+      margin: 40px auto 0 auto;
+      background: rgba(24, 24, 36, 0.98);
+      padding: 32px 24px 28px 24px;
+      border-radius: 18px;
+      box-shadow: 0 0 32px #00ffc344, 0 2px 12px #23243a88;
+      font-size: 1.18em;
+      position: relative;
+      min-height: 220px;
+      letter-spacing: 0.01em;
+    }
+    button {
+      margin: 12px 8px 0 8px;
+      padding: 12px 28px;
+      font-size: 1.08em;
+      background: linear-gradient(90deg, #00ffc3, #23243a 90%);
+      color: #23243a;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 8px #00ffc344;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      outline: none;
+      margin-bottom: 8px;
+    }
+    button:hover, button:focus {
+      background: linear-gradient(90deg, #23243a, #00ffc3 90%);
+      color: #00ffc3;
+      box-shadow: 0 4px 16px #00ffc355;
+    }
+    input {
+      padding: 10px;
+      border-radius: 7px;
+      border: none;
+      margin-top: 10px;
+      font-size: 1em;
+      background: #181824;
+      color: #fff;
+      box-shadow: 0 1px 4px #00ffc344;
+      outline: none;
+    }
+    .fade {
+      animation: fadeIn 1.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to   { opacity: 1; transform: translateY(0);}
+    }
+    .lang-btn {
+      background: #fff;
+      color: #222;
+      border: none;
+      border-radius: 22px;
+      font-size: 1em;
+      font-weight: 600;
+      padding: 8px 22px;
+      margin-left: 6px;
+      margin-right: 0;
+      box-shadow: 0 2px 8px #00ffc344;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .lang-btn.active, .lang-btn:focus {
+      background: #00ffc3;
+      color: #181818;
+      box-shadow: 0 4px 16px #00ffc355;
+    }
+    .lang-btn:hover {
+      background: #e0fff7;
+      color: #00bfa3;
+    }
+    /* Intro Splash */
+    #introSplash {
+      position: fixed;
+      z-index: 9999;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, #23243a 0%, #00ffc3 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: opacity 0.7s;
+      animation: fadeIn 1s;
+    }
+    #introSplash .intro-content {
+      text-align: center;
+      color: #fff;
+      animation: popIn 1.2s cubic-bezier(.4,2,.6,1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    #introSplash .luxury-logo {
+      font-size: 3.5em;
+      color: #00ffc3;
+      text-shadow: 0 0 24px #00ffc3, 0 0 60px #23243a;
+      margin-bottom: 18px;
+      animation: shine 2.5s infinite alternate;
+    }
+    #introSplash h1 {
+      font-size: 2.3em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #00ffc3;
+      text-shadow: 0 2px 18px #23243a, 0 0 8px #00ffc3;
+      margin-bottom: 10px;
+    }
+    #introSplash p {
+      font-size: 1.18em;
+      color: #e0e7ef;
+      margin-bottom: 22px;
+      text-shadow: 0 2px 8px #23243a;
+    }
+    #introSplash .intro-bar {
+      width: 220px;
+      height: 14px;
+      background: #fff3;
+      border-radius: 10px;
+      margin: 24px auto 0 auto;
+      overflow: hidden;
+      box-shadow: 0 2px 8px #00ffc344;
+    }
+    #introSplash .intro-bar-inner {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #00ffc3, #23243a, #00ffc3);
+      border-radius: 10px;
+      animation: introBarAnim 2.2s linear forwards;
+    }
+    @keyframes introBarAnim {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      80% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    @keyframes shine {
+      from { text-shadow: 0 0 24px #00ffc3, 0 0 60px #23243a; }
+      to { text-shadow: 0 0 48px #00ffc3, 0 0 120px #00ffc3; }
+    }
+    @media (max-width: 700px) {
+      .story-box { padding: 12px 4vw 18px 4vw; font-size: 1em;}
+      #introSplash h1 { font-size: 1.3em; }
+      #introSplash p { font-size: 1em; }
+    }
+    @media (max-width: 480px) {
+      html, body { font-size: 15px; }
+      .story-box { padding: 0.7rem 0.3rem 0.7rem 0.3rem; }
+      #introSplash .luxury-logo { font-size: 2em; }
+      #introSplash h1 { font-size: 1em; }
+      #introSplash p { font-size: 0.95em; }
+      #introSplash .intro-bar { width: 140px; height: 10px; }
+    }
+    /* Typing effect */
+    .typing {
+      border-right: 2px solid #00ffc3;
+      white-space: pre-line;
+      min-height: 2em;
+      display: inline-block;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink {
+      0%, 100% { border-color: #00ffc3; }
+      50% { border-color: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Intro Splash -->
+  <div id="introSplash">
+    <div class="intro-content">
+      <div class="luxury-logo">
+        <span style="font-size:1.2em;">🌧️</span>
+      </div>
+      <h1>Bayangan di Balik Hujan</h1>
+      <p>
+        <span style="color:#00ffc3;font-weight:bold;">A Journey Through Memories & Hope</span><br>
+        <span style="font-size:1.08em;">Sebuah kisah visual interaktif tentang luka, harapan, dan pelangi setelah hujan.<br>
+        <span style="color:#00ffc3;">Karya XOBE DEVELOPMENT & FouRkiting Studios   [VERSION 1.5]</span></span>
+      </p>
+      <div class="intro-bar"><div class="intro-bar-inner"></div></div>
+    </div>
+  </div>
+  <div class="story-box fade" id="game" style="display:none;">
+    <h2>Memuat...</h2>
+  </div>
+  <div id="lang-switch" style="text-align:right;max-width:800px;margin:24px auto 10px auto;display:none;">
+    <button class="lang-btn" onclick="setLang('idn')" id="btnID">🇮🇩 Indonesia</button>
+    <button class="lang-btn" onclick="setLang('en')" id="btnEN">🇬🇧 English</button>
+  </div>
+  <script>
+    // Intro Splash auto close & tampilkan game
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        document.getElementById('introSplash').style.opacity = 0;
+        setTimeout(function() {
+          document.getElementById('introSplash').style.display = 'none';
+          document.getElementById('game').style.display = 'block';
+        }, 700);
+      }, 2600);
+    });
+
+    const game = document.getElementById("game");
+
+    let player = {
+      name: "",
+      emosi: 0,
+      harapan: 0
+    };
+
+    // TYPING EFFECT - fix: no double buttons, no weird chars, block input while typing
+    let isTyping = false;
+    function typeText(element, text, cb) {
+      isTyping = true;
+      element.innerHTML = '<span class="typing"></span>';
+      const typingSpan = element.querySelector('.typing');
+      let i = 0;
+      function type() {
+        // Hapus karakter aneh (non-printable) agar tidak error
+        let safeText = text.replace(/[\u200B-\u200D\uFEFF]/g, "");
+        if (i <= safeText.length) {
+          typingSpan.innerHTML = safeText.slice(0, i).replace(/\n/g, "<br>");
+          i++;
+          // Smooth typing delay
+          let base = 12 + Math.sin(i / safeText.length * Math.PI) * 18;
+          let delay = base + Math.random() * 18;
+          if (/[.,?!…]/.test(safeText[i - 2])) delay += 80;
+          if (safeText[i - 2] === "\n") delay += 60;
+          setTimeout(type, delay);
+        } else {
+          typingSpan.classList.remove('typing');
+          isTyping = false;
+          if (cb) cb();
+        }
+      }
+      type();
+    }
+
+    let lang = "idn"; // default
+    function setLang(l) {
+      lang = l;
+      renderCurrentScene();
+      document.getElementById("btnID").classList.toggle("active", lang === "idn");
+      document.getElementById("btnEN").classList.toggle("active", lang === "en");
+    }
+    let currentSceneKey = "title";
+    function renderCurrentScene() { showScene(currentSceneKey); }
+
+    // --- SCENES ---
+    const scenes = {
+    // Judul
+    title: {
+      idn: {
+        text: `🌧️ <span style="font-size:24px">"Bayangan di Balik Hujan"</span><br><br><i>Sebuah kisah tentang luka, harapan, dan kenangan...</i>`,
+        options: [{ text: "📝 Mulai Permainan", next: "name" }]
+      },
+      en: {
+        text: `🌧️ <span style="font-size:24px">"Shadows Behind the Rain"</span><br><br><i>A story about wounds, hope, and memories...</i>`,
+        options: [{ text: "📝 Start Game", next: "name" }]
+      }
+    },
+    // Nama
+    name: {
+      idn: {
+        text: `Masukkan nama karaktermu untuk memulai petualangan: <br><input id="nameInput" placeholder="Namamu..." />`,
+        options: [{ text: "✅ Konfirmasi", next: "scene1", custom: true }]
+      },
+      en: {
+        text: `Enter your character's name to start the adventure: <br><input id="nameInput" placeholder="Your name..." />`,
+        options: [{ text: "✅ Confirm", next: "scene1", custom: true }]
+      }
+    },
+    // BAB 1
+    scene1: {
+      idn: {
+        text: () => `Hujan turun membasahi malam. Kamu, ${player.name}, duduk sendiri di halte yang dingin dan sepi.<br><br>Di tanganmu, kenangan masih basah...`,
+        options: [
+          { text: "💭 Renungkan masa lalu", next: "renung", effect: () => player.emosi += 1 },
+          { text: "📱 Lihat ponsel", next: "ponsel", effect: () => player.harapan += 1 }
+        ]
+      },
+      en: {
+        text: () => `Rain falls on the night. You, ${player.name}, sit alone at a cold, empty bus stop.<br><br>In your hands, memories are still fresh...`,
+        options: [
+          { text: "💭 Reflect on the past", next: "renung", effect: () => player.emosi += 1 },
+          { text: "📱 Check your phone", next: "ponsel", effect: () => player.harapan += 1 }
+        ]
+      }
+    },
+    renung: {
+      idn: {
+        text: () => `Wajahnya hadir kembali... senyumnya yang dulu menghangatkan dunia kecilmu.<br><br>Air hujan bercampur air mata.`,
+        options: [
+          { text: "Tunggu di halte", next: "scene2_wait" },
+          { text: "Pergi jalan kaki", next: "scene2_walk" }
+        ]
+      },
+      en: {
+        text: () => `Her face returns... her smile once warmed your small world.<br><br>Rain mixes with your tears.`,
+        options: [
+          { text: "Wait at the bus stop", next: "scene2_wait" },
+          { text: "Walk away", next: "scene2_walk" }
+        ]
+      }
+    },
+    ponsel: {
+      idn: {
+        text: () => `Tak ada pesan. Notifikasi kosong. Tapi... satu nama muncul. <b>Mira</b>.<br><br>Hatinya pernah menyentuh hatimu.`,
+        options: [
+          { text: "Buka pesannya", next: "scene2_msg", effect: () => player.harapan += 1 },
+          { text: "Abaikan", next: "scene2_ignore", effect: () => player.emosi += 1 }
+        ]
+      },
+      en: {
+        text: () => `No messages. No notifications. But... one name appears. <b>Mira</b>.<br><br>Her heart once touched yours.`,
+        options: [
+          { text: "Open her message", next: "scene2_msg", effect: () => player.harapan += 1 },
+          { text: "Ignore", next: "scene2_ignore", effect: () => player.emosi += 1 }
+        ]
+      }
+    },
+    scene2_msg: {
+      idn: {
+        text: () => `"<i>Apakah kamu masih di sana... di tempat kita biasa menunggu?</i>"<br><br>Hati kecilmu bergetar.`,
+        options: [
+          { text: "Tunggu dia", next: "scene3_mira" },
+          { text: "Balas: Aku sudah berubah", next: "scene3_alt" }
+        ]
+      },
+      en: {
+        text: () => `"<i>Are you still there... at the place we used to wait?</i>"<br><br>Your heart trembles.`,
+        options: [
+          { text: "Wait for her", next: "scene3_mira" },
+          { text: "Reply: I've changed", next: "scene3_alt" }
+        ]
+      }
+    },
+    scene2_ignore: {
+      idn: {
+        text: `Layar mati. Tapi hati tak pernah benar-benar padam. Sunyi lebih menusuk dari hujan.`,
+        options: [{ text: "🔁 Main Ulang", next: "title" }]
+      },
+      en: {
+        text: `The screen goes dark. But your heart never truly fades. Silence stings more than the rain.`,
+        options: [{ text: "🔁 Restart", next: "title" }]
+      }
+    },
+    scene2_wait: {
+      idn: {
+        text: `Jam demi jam berlalu. Sepasang kaki mendekat. Itu dia. Mira.`,
+        options: [{ text: "🧍‍♂️ Sapa dia", next: "scene3_mira" }]
+      },
+      en: {
+        text: `Hours pass. Footsteps approach. It's her. Mira.`,
+        options: [{ text: "🧍‍♂️ Greet her", next: "scene3_mira" }]
+      }
+    },
+    scene2_walk: {
+      idn: {
+        text: `Langkahmu menjauh. Tapi setiap jejak membawa rasa rindu yang tak selesai.`,
+        options: [{ text: "🔁 Main Ulang", next: "title" }]
+      },
+      en: {
+        text: `You walk away. But every step brings an unfinished longing.`,
+        options: [{ text: "🔁 Restart", next: "title" }]
+      }
+    },
+    scene3_mira: {
+      idn: {
+        text: () => `Mira berdiri di hadapanmu. Senyumnya lelah, tapi matanya masih menyimpan hangatnya masa lalu.<br><br>💬 "Kau datang... seperti yang dulu kau janjikan."`,
+        options: [
+          { text: "Aku tak pernah benar-benar pergi", next: "ending_baik" },
+          { text: "Aku cuma ingin jawaban", next: "ending_pahit" }
+        ]
+      },
+      en: {
+        text: () => `Mira stands before you. Her smile is tired, but her eyes still hold the warmth of the past.<br><br>💬 "You came... just like you promised."`,
+        options: [
+          { text: "I never really left", next: "ending_baik" },
+          { text: "I just want an answer", next: "ending_pahit" }
+        ]
+      }
+    },
+    scene3_alt: {
+      idn: {
+        text: `Tak ada balasan. Mungkin, kamu datang terlalu lambat. Hujan tetap turun, menemani keheningan.`,
+        options: [{ text: "🔁 Main Ulang", next: "title" }]
+      },
+      en: {
+        text: `No reply. Maybe you came too late. The rain keeps falling, accompanying the silence.`,
+        options: [{ text: "🔁 Restart", next: "title" }]
+      }
+    },
+    ending_baik: {
+      idn: {
+        text: () => `Mereka bicara hingga pagi. Kadang, yang patah bisa tumbuh lagi.<br><br>🌤️ <b>Akhir Harapan</b><br>Emosi: ${player.emosi} | Harapan: ${player.harapan}`,
+        options: [
+          { text: "📖 Lanjut ke Bab 2", next: "scene4" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `They talk until morning. Sometimes, what is broken can grow again.<br><br>🌤️ <b>Ending of Hope</b><br>Emotion: ${player.emosi} | Hope: ${player.harapan}`,
+        options: [
+          { text: "📖 Continue to Chapter 2", next: "scene4" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    ending_pahit: {
+      idn: {
+        text: () => `Mira mengangguk, tapi keheningan berkata lebih banyak.<br><br>💔 "Beberapa janji tak perlu ditepati jika menyakitkan."<br><br>🌫️ <b>Akhir Luka</b><br>Emosi: ${player.emosi} | Harapan: ${player.harapan}`,
+        options: [
+          { text: "📖 Lanjut ke Bab 2", next: "scene4" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `Mira nods, but silence says more.<br><br>💔 "Some promises don't need to be kept if they hurt."<br><br>🌫️ <b>Ending of Pain</b><br>Emotion: ${player.emosi} | Hope: ${player.harapan}`,
+        options: [
+          { text: "📖 Continue to Chapter 2", next: "scene4" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    // BAB 2
+    scene4: {
+      idn: {
+        text: () => `🕊️ <b>Bab 2: Setelah Hujan</b><br><br>Pagi menyambutmu dan Mira. Secangkir teh, suara burung, dan senyum yang mencoba tumbuh kembali.`,
+        options: [
+          { text: "🌼 Bicarakan masa depan", next: "scene5", effect: () => player.harapan += 2 },
+          { text: "🕳️ Bicara tentang kesalahan", next: "scene6", effect: () => player.emosi += 2 }
+        ]
+      },
+      en: {
+        text: () => `🕊️ <b>Chapter 2: After the Rain</b><br><br>Morning greets you and Mira. A cup of tea, birdsong, and a smile trying to grow again.`,
+        options: [
+          { text: "🌼 Talk about the future", next: "scene5", effect: () => player.harapan += 2 },
+          { text: "🕳️ Talk about mistakes", next: "scene6", effect: () => player.emosi += 2 }
+        ]
+      }
+    },
+    scene5: {
+      idn: {
+        text: () => `Kalian membicarakan impian-impian yang dulu terkubur. Mungkin belum terlambat untuk menanam kembali harapan.`,
+        options: [{ text: "📚 Tamatkan Bab 2", next: "ending2_harapan" }]
+      },
+      en: {
+        text: () => `You talk about dreams once buried. Maybe it's not too late to plant hope again.`,
+        options: [{ text: "📚 End Chapter 2", next: "ending2_harapan" }]
+      }
+    },
+    scene6: {
+      idn: {
+        text: () => `Air mata tak bisa ditahan. Tapi dari tangis itu, ada kejujuran yang akhirnya keluar.`,
+        options: [{ text: "📚 Tamatkan Bab 2", next: "ending2_emosi" }]
+      },
+      en: {
+        text: () => `Tears can't be held back. But from those tears, honesty finally emerges.`,
+        options: [{ text: "📚 End Chapter 2", next: "ending2_emosi" }]
+      }
+    },
+    ending2_harapan: {
+      idn: {
+        text: () => `🌈 <b>Akhir Baru</b><br>Mereka tak sempurna, tapi kini saling menjaga arah.<br><br>Emosi: ${player.emosi} | Harapan: ${player.harapan}`,
+        options: [
+          { text: "📖 Lanjut ke Bab 3", next: "scene7" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `🌈 <b>New Ending</b><br>They're not perfect, but now they guide each other.<br><br>Emotion: ${player.emosi} | Hope: ${player.harapan}`,
+        options: [
+          { text: "📖 Continue to Chapter 3", next: "scene7" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    ending2_emosi: {
+      idn: {
+        text: () => `⚡ <b>Kebenaran yang Menyakitkan</b><br>Tapi kadang, kejujuran lebih penting dari kebahagiaan palsu.<br><br>Emosi: ${player.emosi} | Harapan: ${player.harapan}`,
+        options: [
+          { text: "📖 Lanjut ke Bab 3", next: "scene7" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `⚡ <b>Painful Truth</b><br>But sometimes, honesty is more important than fake happiness.<br><br>Emotion: ${player.emosi} | Hope: ${player.harapan}`,
+        options: [
+          { text: "📖 Continue to Chapter 3", next: "scene7" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    // BAB 3
+    scene7: {
+      idn: {
+        text: () => `🌤️ <b>Bab 3: Pelangi Setelah Badai</b><br><br>Beberapa bulan telah berlalu. Hubunganmu dengan Mira semakin dalam, namun tantangan baru muncul...`,
+        options: [
+          { text: "🏡 Renovasi rumah bersama", next: "scene8", effect: () => player.harapan += 1 },
+          { text: "🗝️ Kunjungi tempat kenangan", next: "scene9", effect: () => player.emosi += 1 }
+        ]
+      },
+      en: {
+        text: () => `🌤️ <b>Chapter 3: Rainbow After the Storm</b><br><br>Months have passed. Your relationship with Mira grows deeper, but new challenges arise...`,
+        options: [
+          { text: "🏡 Renovate the house together", next: "scene8", effect: () => player.harapan += 1 },
+          { text: "🗝️ Visit a place of memories", next: "scene9", effect: () => player.emosi += 1 }
+        ]
+      }
+    },
+    scene8: {
+      idn: {
+        text: () => `Kalian bekerja sama, menemukan keindahan dalam kerja keras. Tapi sebuah surat misterius tiba...`,
+        options: [
+          { text: "📖 Baca surat", next: "ending3_surat" },
+          { text: "🔥 Hancurkan surat", next: "ending3_hancur" }
+        ]
+      },
+      en: {
+        text: () => `You work together, finding beauty in hard work. But a mysterious letter arrives...`,
+        options: [
+          { text: "📖 Read the letter", next: "ending3_surat" },
+          { text: "🔥 Destroy the letter", next: "ending3_hancur" }
+        ]
+      }
+    },
+    scene9: {
+      idn: {
+        text: () => `Tempat itu masih sama. Tapi Mira terlihat gelisah. "Aku harus memberitahumu sesuatu..."`,
+        options: [
+          { text: "👂 Dengarkan dia", next: "ending3_dengar" },
+          { text: "🚶 Pergi", next: "ending3_pergi" }
+        ]
+      },
+      en: {
+        text: () => `The place is still the same. But Mira looks uneasy. "I have to tell you something..."`,
+        options: [
+          { text: "👂 Listen to her", next: "ending3_dengar" },
+          { text: "🚶 Leave", next: "ending3_pergi" }
+        ]
+      }
+    },
+    ending3_surat: {
+      idn: {
+        text: () => `Surat itu berisi tawaran kerja di luar kota. Kalian memutuskan pergi bersama. 🌈<br><br><b>Akhir: Perjalanan Baru</b><br>Stats Akhir: Emosi ${player.emosi} | Harapan ${player.harapan}`,
+        options: [
+          { text: "📖 Lanjut ke Bab 4", next: "scene10" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `The letter contains a job offer out of town. You decide to go together. 🌈<br><br><b>Ending: New Journey</b><br>Final Stats: Emotion ${player.emosi} | Hope ${player.harapan}`,
+        options: [
+          { text: "📖 Continue to Chapter 4", next: "scene10" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    ending3_hancur: {
+      idn: {
+        text: () => `Mira marah. Tapi akhirnya, kalian memilih untuk tetap disini. 🏠<br><br><b>Akhir: Rumah Kami</b><br>Stats Akhir: Emosi ${player.emosi} | Harapan ${player.harapan}`,
+        options: [
+          { text: "📖 Lanjut ke Bab 4", next: "scene10" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `Mira is angry. But in the end, you choose to stay. 🏠<br><br><b>Ending: Our Home</b><br>Final Stats: Emotion ${player.emosi} | Hope ${player.harapan}`,
+        options: [
+          { text: "📖 Continue to Chapter 4", next: "scene10" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    ending3_dengar: {
+      idn: {
+        text: () => `Mira mengaku akan pindah. Tapi kali ini, kalian berjanji tak terpisahkan. ✉️<br><br><b>Akhir: Janji Abadi</b><br>Stats Akhir: Emosi ${player.emosi} | Harapan ${player.harapan}`,
+        options: [
+          { text: "📖 Lanjut ke Bab 4", next: "scene10" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `Mira admits she will move. But this time, you promise not to be separated. ✉️<br><br><b>Ending: Eternal Promise</b><br>Final Stats: Emotion ${player.emosi} | Hope ${player.harapan}`,
+        options: [
+          { text: "📖 Continue to Chapter 4", next: "scene10" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    ending3_pergi: {
+      idn: {
+        text: () => `Kamu pergi, meninggalkan Mira. Hujan kembali turun... 🌧️<br><br><b>Akhir: Hujan Kembali</b><br>Stats Akhir: Emosi ${player.emosi} | Harapan ${player.harapan}`,
+        options: [
+          { text: "📖 Lanjut ke Bab 4", next: "scene10" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `You leave, leaving Mira behind. The rain falls again... 🌧️<br><br><b>Ending: Rain Returns</b><br>Final Stats: Emotion ${player.emosi} | Hope ${player.harapan}`,
+        options: [
+          { text: "📖 Continue to Chapter 4", next: "scene10" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    // BAB 4
+    scene10: {
+      idn: {
+        text: () => `🌅 <b>Bab 4: Jejak yang Tertinggal</b><br><br>
+        Waktu berlalu. Kota mulai berubah, tapi kenangan tetap tinggal. Suatu pagi, kamu menemukan buku harian lama Mira di antara tumpukan barang.<br><br>
+        Di setiap halamannya, ada kisah tentang harapan, luka, dan impian yang belum selesai.<br><br>
+        <i>"Jika suatu hari aku pergi, bukan berarti aku ingin melupakan. Aku hanya ingin kamu menemukan dirimu sendiri."</i>`,
+        options: [
+          { text: "📖 Baca lebih dalam", next: "scene11", effect: () => player.emosi += 1 },
+          { text: "💭 Renungkan pesan itu", next: "scene12", effect: () => player.harapan += 1 }
+        ]
+      },
+      en: {
+        text: () => `🌅 <b>Chapter 4: Traces Left Behind</b><br><br>
+        Time passes. The city changes, but memories remain. One morning, you find Mira's old diary among a pile of things.<br><br>
+        On every page, there are stories of hope, pain, and unfinished dreams.<br><br>
+        <i>"If one day I leave, it doesn't mean I want to forget. I just want you to find yourself."</i>`,
+        options: [
+          { text: "📖 Read deeper", next: "scene11", effect: () => player.emosi += 1 },
+          { text: "💭 Reflect on the message", next: "scene12", effect: () => player.harapan += 1 }
+        ]
+      }
+    },
+    scene11: {
+      idn: {
+        text: () => `Setiap kata di buku harian itu seperti suara Mira yang berbicara langsung ke hatimu.<br><br>
+        Kamu sadar, selama ini kamu terlalu sibuk mengejar masa lalu, hingga lupa merangkul masa depan.<br><br>
+        Air matamu jatuh, tapi kali ini bukan karena kehilangan, melainkan karena rasa syukur pernah mencintai.`,
+        options: [
+          { text: "🌱 Putuskan untuk melangkah maju", next: "scene13" }
+        ]
+      },
+      en: {
+        text: () => `Every word in the diary feels like Mira speaking directly to your heart.<br><br>
+        You realize you've been too busy chasing the past, forgetting to embrace the future.<br><br>
+        Your tears fall, but this time not from loss, but from gratitude for having loved.`,
+        options: [
+          { text: "🌱 Decide to move forward", next: "scene13" }
+        ]
+      }
+    },
+    scene12: {
+      idn: {
+        text: () => `Kamu menutup buku harian itu dan menatap keluar jendela. Hujan sudah reda, tapi jejaknya masih membekas di jalanan.<br><br>
+        Kamu tahu, hidup harus terus berjalan. Tapi kenangan itu akan selalu menjadi bagian dari dirimu.`,
+        options: [
+          { text: "🌱 Putuskan untuk melangkah maju", next: "scene13" }
+        ]
+      },
+      en: {
+        text: () => `You close the diary and look out the window. The rain has stopped, but its traces remain on the street.<br><br>
+        You know life must go on. But those memories will always be part of you.`,
+        options: [
+          { text: "🌱 Decide to move forward", next: "scene13" }
+        ]
+      }
+    },
+    scene13: {
+      idn: {
+        text: () => `Kamu berdiri di depan cermin, menatap dirimu sendiri. Untuk pertama kalinya, kamu tersenyum tanpa beban.<br><br>
+        <i>"Terima kasih, Mira. Aku akan baik-baik saja."</i><br><br>
+        Saat kamu keluar rumah, pelangi muncul di langit. Sebuah pertanda bahwa setiap hujan pasti berakhir, dan harapan selalu ada.`,
+        options: [
+          { text: "🌤️ Lanjut ke Bab 5", next: "scene14" }
+        ]
+      },
+      en: {
+        text: () => `You stand in front of the mirror, looking at yourself. For the first time, you smile without burden.<br><br>
+        <i>"Thank you, Mira. I'll be okay."</i><br><br>
+        As you leave the house, a rainbow appears in the sky. A sign that every rain ends, and hope always exists.`,
+        options: [
+          { text: "🌤️ Continue to Chapter 5", next: "scene14" }
+        ]
+      }
+    },
+    // BAB 5
+    scene14: {
+      idn: {
+        text: () => `🌈 <b>Bab 5: Pelangi di Balik Luka</b><br><br>
+      Beberapa tahun kemudian, kamu telah tumbuh menjadi pribadi yang lebih kuat. Luka lama memang tak pernah benar-benar hilang, tapi kini kamu mampu melihat keindahan di baliknya.<br><br>
+      Suatu hari, kamu menerima surat dari Mira. Ia menulis:<br><br>
+      <i>"Aku harap kamu bahagia, di mana pun kamu berada. Terima kasih sudah menjadi bagian dari perjalanan hidupku."</i><br><br>
+      Surat itu tidak membuatmu sedih, justru menghadirkan kehangatan yang menenangkan.`,
+        options: [
+          { text: "💌 Balas surat itu", next: "scene15", effect: () => player.harapan += 2 },
+          { text: "🌱 Simpan surat itu sebagai kenangan", next: "scene16", effect: () => player.emosi += 2 },
+          { text: "➡️ Lanjut ke Bab 6", next: "scene_bab6" }
+        ]
+      },
+      en: {
+        text: () => `🌈 <b>Chapter 5: Rainbow Behind the Wounds</b><br><br>
+      Years later, you have grown stronger. Old wounds never truly disappear, but now you can see the beauty behind them.<br><br>
+      One day, you receive a letter from Mira. She writes:<br><br>
+      <i>"I hope you're happy, wherever you are. Thank you for being part of my journey."</i><br><br>
+      The letter doesn't make you sad, but brings a comforting warmth.`,
+        options: [
+          { text: "💌 Reply to the letter", next: "scene15", effect: () => player.harapan += 2 },
+          { text: "🌱 Keep the letter as a memory", next: "scene16", effect: () => player.emosi += 2 },
+          { text: "➡️ Continue to Chapter 6", next: "scene_bab6" }
+        ]
+      }
+    },
+    scene15: {
+      idn: {
+        text: () => `Kamu menulis balasan dengan hati yang lapang:<br><br>
+      <i>"Terima kasih, Mira. Aku juga bahagia. Semoga jalanmu selalu penuh cahaya."</i><br><br>
+      Setelah mengirim surat itu, kamu merasa benar-benar merdeka dari bayang-bayang masa lalu.<br><br>
+      <b>Kamu siap membuka lembaran baru.</b>`,
+        options: [
+          { text: "➡️ Lanjut ke Bab 6", next: "scene_bab6" }
+        ]
+      },
+      en: {
+        text: () => `You write a reply with an open heart:<br><br>
+      <i>"Thank you, Mira. I'm happy too. May your path always be full of light."</i><br><br>
+      After sending the letter, you feel truly free from the shadows of the past.<br><br>
+      <b>You are ready to start a new chapter.</b>`,
+        options: [
+          { text: "➡️ Continue to Chapter 6", next: "scene_bab6" }
+        ]
+      }
+    },
+    scene16: {
+      idn: {
+        text: () => `Kamu menyimpan surat itu di kotak kenangan. Setiap kali membacanya, kamu diingatkan bahwa luka bukan untuk disesali, tapi untuk dipeluk dan diterima.<br><br>
+      Hidupmu terus berjalan, dan kamu siap menyambut hari-hari baru.<br><br>
+      <b>Waktunya melangkah ke bab berikutnya.</b>`,
+        options: [
+          { text: "➡️ Lanjut ke Bab 6", next: "scene_bab6" }
+        ]
+      },
+      en: {
+        text: () => `You keep the letter in a memory box. Every time you read it, you're reminded that wounds are not to be regretted, but to be embraced and accepted.<br><br>
+      Your life goes on, and you're ready to welcome new days.<br><br>
+      <b>It's time to move to the next chapter.</b>`,
+        options: [
+          { text: "➡️ Continue to Chapter 6", next: "scene_bab6" }
+        ]
+      }
+    },
+    // BAB 6
+    scene_bab6: {
+      idn: {
+        text: () => `🌌 <b>Bab 6: Malam Tanpa Batas</b><br><br>
+        Malam itu, kamu bermimpi aneh. Dirimu berjalan di lorong tak berujung, bertemu bayangan masa lalu, suara tawa, dan tangis silih berganti.<br>
+        Tiba-tiba, kamu melihat Mira kecil, tersesat di tengah hujan deras.<br><br>
+        <i>"Jangan tinggalkan aku..."</i>`,
+        options: [
+          { text: "🌙 Rangkul Mira kecil", next: "scene_bab7" },
+          { text: "🔙 Kembali ke Bab 5", next: "scene14" }
+        ]
+      },
+      en: {
+        text: () => `🌌 <b>Chapter 6: Endless Night</b><br><br>
+        That night, you have a strange dream. You walk through an endless corridor, meeting shadows of the past, laughter and tears echoing.<br>
+        Suddenly, you see little Mira, lost in the pouring rain.<br><br>
+        <i>"Don't leave me..."</i>`,
+        options: [
+          { text: "🌙 Embrace little Mira", next: "scene_bab7" },
+          { text: "🔙 Back to Chapter 5", next: "scene14" }
+        ]
+      }
+    },
+    // BAB 7
+    scene_bab7: {
+      idn: {
+        text: () => `🌠 <b>Bab 7: Fajar Baru</b><br><br>
+        Kamu terbangun dengan perasaan damai. Mira tersenyum di sampingmu, dan dunia terasa penuh warna.<br>
+        Hari ini, kamu dan Mira memulai petualangan baru: membangun keluarga, mengejar mimpi, dan menulis kisah kalian sendiri.<br><br>
+        <b>Hidup memang tak selalu mudah, tapi kini kamu tahu: setelah hujan, selalu ada pelangi.</b>`,
+        options: [
+          { text: "➡️ Lanjut ke Bab 8", next: "scene_bab8" },
+          { text: "🔙 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `🌠 <b>Chapter 7: New Dawn</b><br><br>
+        You wake up feeling peaceful. Mira smiles beside you, and the world is full of color.<br>
+        Today, you and Mira begin a new adventure: building a family, chasing dreams, and writing your own story.<br><br>
+        <b>Life isn't always easy, but now you know: after the rain, there is always a rainbow.</b>`,
+        options: [
+          { text: "➡️ Continue to Chapter 8", next: "scene_bab8" },
+          { text: "🔙 Restart", next: "title" }
+        ]
+      }
+    },
+    // BAB 8
+    scene_bab8: {
+      idn: {
+        text: () => `🌌 <b>Bab 8: Jejak Waktu</b><br><br>
+        Tahun-tahun berlalu. Kamu dan Mira menghadapi suka duka kehidupan: kehilangan, kelahiran, dan perubahan.<br>
+        Di tengah perjalanan, kalian belajar bahwa cinta sejati bukan hanya tentang kebahagiaan, tapi juga tentang bertahan bersama dalam badai.<br><br>
+        Suatu malam, di bawah hujan gerimis, Mira berkata:<br>
+        <i>"Terima kasih sudah tetap di sini, meski dunia berubah."</i>`,
+        options: [
+          { text: "💬 Balas: 'Kamu rumahku.'", next: "scene_bab9" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `🌌 <b>Chapter 8: Traces of Time</b><br><br>
+        Years pass. You and Mira face the ups and downs of life: loss, birth, and change.<br>
+        Along the way, you learn that true love is not just about happiness, but about enduring together through the storms.<br><br>
+        One night, under a light rain, Mira says:<br>
+        <i>"Thank you for staying, even as the world changes."</i>`,
+        options: [
+          { text: "💬 Reply: 'You are my home.'", next: "scene_bab9" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    // BAB 9
+    scene_bab9: {
+      idn: {
+        text: () => `🌠 <b>Bab 9: Hujan Terakhir</b><br><br>
+        Di penghujung perjalanan, kamu dan Mira duduk bersama di teras rumah, menatap hujan terakhir musim itu.<br>
+        Kalian sadar, hidup adalah rangkaian perpisahan dan pertemuan, luka dan harapan.<br><br>
+        Mira menggenggam tanganmu erat:<br>
+        <i>"Selama kita bersama, tak ada hujan yang benar-benar menakutkan."</i><br><br>
+        <b>Dan di balik hujan, selalu ada bayangan cinta yang abadi.</b>`,
+        options: [
+          { text: "🌈 Tamatkan Kisah", next: "ending_final_bahagia" },
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `🌠 <b>Chapter 9: The Last Rain</b><br><br>
+        At the end of the journey, you and Mira sit together on the porch, watching the last rain of the season.<br>
+        You realize that life is a series of goodbyes and hellos, wounds and hopes.<br><br>
+        Mira holds your hand tightly:<br>
+        <i>"As long as we're together, no rain is truly frightening."</i><br><br>
+        <b>And behind the rain, there is always the shadow of eternal love.</b>`,
+        options: [
+          { text: "🌈 End the Story", next: "ending_final_bahagia" },
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    },
+    // ENDING FINAL BAHAGIA (CREDITS)
+    ending_final_bahagia: {
+      idn: {
+        text: () => `🌟 <b>Akhir Bahagia</b><br>
+        Kamu dan Mira telah menemukan kedamaian masing-masing. Hujan telah reda, pelangi muncul, dan hidup berjalan ke depan.<br><br>
+        <b>Terima kasih telah memainkan kisah ini.</b><br><br>
+        <hr style="margin:18px 0;">
+        <div style="font-size:1.1em;opacity:0.8;">
+          <b>Credits:</b><br>
+          Dibuat oleh <b>Xobe Development</b><br>
+          bersama <b>FouRkiting Studios</b>
+        </div>`,
+        options: [
+          { text: "🔁 Main Ulang", next: "title" }
+        ]
+      },
+      en: {
+        text: () => `🌟 <b>Happy Ending</b><br>
+        You and Mira have found your own peace. The rain has stopped, the rainbow appears, and life moves forward.<br><br>
+        <b>Thank you for playing this story.</b><br><br>
+        <hr style="margin:18px 0;">
+        <div style="font-size:1.1em;opacity:0.8;">
+          <b>Credits:</b><br>
+          Created by <b>Xobe Development</b><br>
+          with <b>FouRkiting Studios</b>
+        </div>`,
+        options: [
+          { text: "🔁 Restart", next: "title" }
+        ]
+      }
+    }
+    // ...scene lain tetap...
+    };
+
+    // --- RENDER SCENE DENGAN TYPING EFFECT ---
+    function showScene(key) {
+      currentSceneKey = key;
+      const scene = scenes[key];
+      if (!scene) return;
+      const data = scene[lang] || scene["idn"];
+      let html = typeof data.text === "function" ? data.text() : data.text;
+      // Typing effect
+      game.innerHTML = `<div id="typeTarget"></div>`;
+      typeText(document.getElementById("typeTarget"), html.toString(), () => {
+        // Setelah typing selesai, render tombol
+        if (data.options) {
+          data.options.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.textContent = opt.text;
+            btn.onclick = () => {
+              // Blok klik tombol jika typing masih berjalan
+              if (isTyping) return;
+              if (opt.custom) {
+                const input = document.getElementById("nameInput");
+                if (input && input.value) {
+                  player.name = input.value;
+                  showScene(opt.next);
+                }
+              } else {
+                if (opt.effect) opt.effect();
+                showScene(opt.next);
+              }
+            };
+            game.appendChild(btn);
+          });
+        }
+        // Tampilkan tombol bahasa hanya di scene judul utama
+        document.getElementById("lang-switch").style.display = (key === "title") ? "block" : "none";
+        // Highlight tombol aktif
+        document.getElementById("btnID").classList.toggle("active", lang === "idn");
+        document.getElementById("btnEN").classList.toggle("active", lang === "en");
+      });
+    }
+
+    // Mulai dari intro
+    setTimeout(playIntro, 2700);
+    function playIntro() {
+      showScene("title");
+    }
+
+    // Tombol bahasa: blok klik saat typing
+    document.getElementById("btnID").onclick = function() {
+      if (isTyping) return;
+      setLang('idn');
+    };
+    document.getElementById("btnEN").onclick = function() {
+      if (isTyping) return;
+      setLang('en');
+    };
+  </script>
+</body>
+</html>
